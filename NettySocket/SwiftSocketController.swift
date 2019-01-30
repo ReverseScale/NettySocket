@@ -29,9 +29,9 @@ class SwiftSocketController: UIViewController {
         
         switch client.connect(timeout: 10) {
         case .success:
-            appendToTextField(string: "Connected to host \(client.address)")
+            appendToTextField(string: "连接到主机 \(client.address)")
             if let response = sendRequest(string: "GET / HTTP/1.0\n\n", using: client) {
-                appendToTextField(string: "Response: \(response)")
+                appendToTextField(string: "响应: \(response)")
             }
         case .failure(let error):
             appendToTextField(string: String(describing: error))
@@ -39,7 +39,7 @@ class SwiftSocketController: UIViewController {
     }
     
     private func sendRequest(string: String, using client: TCPClient) -> String? {
-        appendToTextField(string: "Sending data ... ")
+        appendToTextField(string: "发送数据 ... ")
         
         switch client.send(string: string) {
         case .success:
