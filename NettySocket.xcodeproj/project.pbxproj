@@ -16,6 +16,7 @@
 		52863F6F2201455C00353295 /* CocoaAsyncSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */; };
 		52863F7222016B5400353295 /* ClientController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7022016B5400353295 /* ClientController.swift */; };
 		52863F7322016B5400353295 /* ServerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7122016B5400353295 /* ServerController.swift */; };
+		52863F76220182C600353295 /* Test.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F75220182C600353295 /* Test.proto.swift */; };
 		7B2676336B3D264E01C61BC8 /* Pods_NettySocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E459F342AF127BE33B558B4 /* Pods_NettySocket.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaAsyncSocketController.swift; sourceTree = "<group>"; };
 		52863F7022016B5400353295 /* ClientController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientController.swift; sourceTree = "<group>"; };
 		52863F7122016B5400353295 /* ServerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerController.swift; sourceTree = "<group>"; };
+		52863F75220182C600353295 /* Test.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Test.proto.swift; sourceTree = "<group>"; };
 		6E459F342AF127BE33B558B4 /* Pods_NettySocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NettySocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2370E415D2EE5B86F712B0D /* Pods-NettySocket.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NettySocket.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -92,12 +94,21 @@
 				52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */,
 				52863F7122016B5400353295 /* ServerController.swift */,
 				52863F7022016B5400353295 /* ClientController.swift */,
+				52863F74220182B400353295 /* ProtocolBuffer */,
 				52863F5D220139F400353295 /* Main.storyboard */,
 				52863F60220139F500353295 /* Assets.xcassets */,
 				52863F62220139F500353295 /* LaunchScreen.storyboard */,
 				52863F65220139F500353295 /* Info.plist */,
 			);
 			path = NettySocket;
+			sourceTree = "<group>";
+		};
+		52863F74220182B400353295 /* ProtocolBuffer */ = {
+			isa = PBXGroup;
+			children = (
+				52863F75220182C600353295 /* Test.proto.swift */,
+			);
+			path = ProtocolBuffer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +212,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
+				"${BUILT_PRODUCTS_DIR}/ProtocolBuffers-Swift/ProtocolBuffers.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftSocket/SwiftSocket.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -208,6 +220,7 @@
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtocolBuffers.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,6 +240,7 @@
 				52863F6F2201455C00353295 /* CocoaAsyncSocketController.swift in Sources */,
 				52863F7322016B5400353295 /* ServerController.swift in Sources */,
 				52863F7222016B5400353295 /* ClientController.swift in Sources */,
+				52863F76220182C600353295 /* Test.proto.swift in Sources */,
 				52863F5A220139F400353295 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

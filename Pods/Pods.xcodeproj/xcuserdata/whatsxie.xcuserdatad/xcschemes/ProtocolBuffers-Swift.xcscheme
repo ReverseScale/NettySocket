@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "93CC9CBA1223D5598803B6B8FF167653"
-               BuildableName = "Pods_NettySocket.framework"
-               BlueprintName = "Pods-NettySocket"
+               BlueprintIdentifier = "9DD7AF7FB014609147227A38D7B2DDFB"
+               BuildableName = "ProtocolBuffers.framework"
+               BlueprintName = "ProtocolBuffers-Swift"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "93CC9CBA1223D5598803B6B8FF167653"
-            BuildableName = "Pods_NettySocket.framework"
-            BlueprintName = "Pods-NettySocket"
+            BlueprintIdentifier = "9DD7AF7FB014609147227A38D7B2DDFB"
+            BuildableName = "ProtocolBuffers.framework"
+            BlueprintName = "ProtocolBuffers-Swift"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

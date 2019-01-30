@@ -30,7 +30,25 @@ class ClientController: UIViewController {
         self.portTexField.delegate = self
         self.messageTextField.delegate  = self
         
+        serializationData()
     }
+    
+    func serializationData() {
+        
+        let person = Person.Builder()
+        person.name = "南小鸟"
+        person.age = 18
+        person.friends = [10]
+        
+        let data = person.getMessage().data()
+
+        let result = try! Person.parseFrom(data: data)
+
+        print(result)
+    }
+    
+//    func deserialization() {
+//    }
     
     @IBAction func connectionAction(_ sender: Any) {
         
