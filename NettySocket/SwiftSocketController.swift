@@ -11,7 +11,7 @@ import SwiftSocket
 
 class SwiftSocketController: UIViewController {
 
-    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var logsTextView: UITextView!
     
     let host = "apple.com"
     let port = 80
@@ -29,23 +29,23 @@ class SwiftSocketController: UIViewController {
         
         switch client.connect(timeout: 10) {
         case .success:
-            appendToTextField(string: "连接到主机 \(client.address)")
+            addLogText("连接到主机 \(client.address)")
             if let response = sendRequest(string: "GET / HTTP/1.0\n\n", using: client) {
-                appendToTextField(string: "响应: \(response)")
+                addLogText("响应: \(response)")
             }
         case .failure(let error):
-            appendToTextField(string: String(describing: error))
+            addLogText(String(describing: error))
         }
     }
     
     private func sendRequest(string: String, using client: TCPClient) -> String? {
-        appendToTextField(string: "发送数据 ... ")
+        addLogText("发送数据 ... ")
         
         switch client.send(string: string) {
         case .success:
             return readResponse(from: client)
         case .failure(let error):
-            appendToTextField(string: String(describing: error))
+            addLogText(String(describing: error))
             return nil
         }
     }
@@ -56,10 +56,8 @@ class SwiftSocketController: UIViewController {
         return String(bytes: response, encoding: .utf8)
     }
     
-    private func appendToTextField(string: String) {
-        print(string)
-        textView.text = textView.text.appending("\n\(string)")
+    func addLogText(_ text: String) {
+        logsTextView.text = logsTextView.text.appending("\n\(text)")
     }
-
 
 }

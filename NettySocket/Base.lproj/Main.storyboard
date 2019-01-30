@@ -83,7 +83,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="k6i-dh-zb2">
                                 <rect key="frame" x="16" y="104" width="343" height="658"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="l8P-hJ-3Cu">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l8P-hJ-3Cu">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="571"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -115,7 +115,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="SwiftSocket" id="ivG-aZ-1zC"/>
                     <connections>
-                        <outlet property="textView" destination="l8P-hJ-3Cu" id="soy-k1-QtQ"/>
+                        <outlet property="logsTextView" destination="l8P-hJ-3Cu" id="soy-k1-QtQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
