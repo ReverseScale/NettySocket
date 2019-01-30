@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		52863F5A220139F400353295 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F59220139F400353295 /* AppDelegate.swift */; };
+		52863F5C220139F400353295 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F5B220139F400353295 /* ViewController.swift */; };
+		52863F5F220139F400353295 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52863F5D220139F400353295 /* Main.storyboard */; };
+		52863F61220139F500353295 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52863F60220139F500353295 /* Assets.xcassets */; };
+		52863F64220139F500353295 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52863F62220139F500353295 /* LaunchScreen.storyboard */; };
+		52863F6D220141FF00353295 /* SwiftSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F6C220141FF00353295 /* SwiftSocketController.swift */; };
+		52863F6F2201455C00353295 /* CocoaAsyncSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */; };
+		52863F7222016B5400353295 /* ClientController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7022016B5400353295 /* ClientController.swift */; };
+		52863F7322016B5400353295 /* ServerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7122016B5400353295 /* ServerController.swift */; };
+		7B2676336B3D264E01C61BC8 /* Pods_NettySocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E459F342AF127BE33B558B4 /* Pods_NettySocket.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2485860A233762C90FD36441 /* Pods-NettySocket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NettySocket.release.xcconfig"; path = "Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket.release.xcconfig"; sourceTree = "<group>"; };
+		52863F56220139F400353295 /* NettySocket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NettySocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		52863F59220139F400353295 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		52863F5B220139F400353295 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		52863F5E220139F400353295 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		52863F60220139F500353295 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		52863F63220139F500353295 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		52863F65220139F500353295 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52863F6C220141FF00353295 /* SwiftSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSocketController.swift; sourceTree = "<group>"; };
+		52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaAsyncSocketController.swift; sourceTree = "<group>"; };
+		52863F7022016B5400353295 /* ClientController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientController.swift; sourceTree = "<group>"; };
+		52863F7122016B5400353295 /* ServerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerController.swift; sourceTree = "<group>"; };
+		6E459F342AF127BE33B558B4 /* Pods_NettySocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NettySocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2370E415D2EE5B86F712B0D /* Pods-NettySocket.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NettySocket.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		52863F53220139F400353295 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7B2676336B3D264E01C61BC8 /* Pods_NettySocket.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		105C8A53C1372F4E774A4D0D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6E459F342AF127BE33B558B4 /* Pods_NettySocket.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		51010FB686833176F23AE714 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C2370E415D2EE5B86F712B0D /* Pods-NettySocket.debug.xcconfig */,
+				2485860A233762C90FD36441 /* Pods-NettySocket.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		52863F4D220139F300353295 = {
+			isa = PBXGroup;
+			children = (
+				52863F58220139F400353295 /* NettySocket */,
+				52863F57220139F400353295 /* Products */,
+				51010FB686833176F23AE714 /* Pods */,
+				105C8A53C1372F4E774A4D0D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		52863F57220139F400353295 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				52863F56220139F400353295 /* NettySocket.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		52863F58220139F400353295 /* NettySocket */ = {
+			isa = PBXGroup;
+			children = (
+				52863F59220139F400353295 /* AppDelegate.swift */,
+				52863F5B220139F400353295 /* ViewController.swift */,
+				52863F6C220141FF00353295 /* SwiftSocketController.swift */,
+				52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */,
+				52863F7122016B5400353295 /* ServerController.swift */,
+				52863F7022016B5400353295 /* ClientController.swift */,
+				52863F5D220139F400353295 /* Main.storyboard */,
+				52863F60220139F500353295 /* Assets.xcassets */,
+				52863F62220139F500353295 /* LaunchScreen.storyboard */,
+				52863F65220139F500353295 /* Info.plist */,
+			);
+			path = NettySocket;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		52863F55220139F400353295 /* NettySocket */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 52863F68220139F500353295 /* Build configuration list for PBXNativeTarget "NettySocket" */;
+			buildPhases = (
+				3CADD8ECB69C29D7A519694C /* [CP] Check Pods Manifest.lock */,
+				52863F52220139F400353295 /* Sources */,
+				52863F53220139F400353295 /* Frameworks */,
+				52863F54220139F400353295 /* Resources */,
+				CF9B5B49CF5D9A18F836561D /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NettySocket;
+			productName = NettySocket;
+			productReference = 52863F56220139F400353295 /* NettySocket.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		52863F4E220139F300353295 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Steven Xie";
+				TargetAttributes = {
+					52863F55220139F400353295 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+				};
+			};
+			buildConfigurationList = 52863F51220139F300353295 /* Build configuration list for PBXProject "NettySocket" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 52863F4D220139F300353295;
+			productRefGroup = 52863F57220139F400353295 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				52863F55220139F400353295 /* NettySocket */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		52863F54220139F400353295 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52863F64220139F500353295 /* LaunchScreen.storyboard in Resources */,
+				52863F61220139F500353295 /* Assets.xcassets in Resources */,
+				52863F5F220139F400353295 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3CADD8ECB69C29D7A519694C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-NettySocket-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CF9B5B49CF5D9A18F836561D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftSocket/SwiftSocket.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		52863F52220139F400353295 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52863F6D220141FF00353295 /* SwiftSocketController.swift in Sources */,
+				52863F5C220139F400353295 /* ViewController.swift in Sources */,
+				52863F6F2201455C00353295 /* CocoaAsyncSocketController.swift in Sources */,
+				52863F7322016B5400353295 /* ServerController.swift in Sources */,
+				52863F7222016B5400353295 /* ClientController.swift in Sources */,
+				52863F5A220139F400353295 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		52863F5D220139F400353295 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				52863F5E220139F400353295 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		52863F62220139F500353295 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				52863F63220139F500353295 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		52863F66220139F500353295 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		52863F67220139F500353295 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		52863F69220139F500353295 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C2370E415D2EE5B86F712B0D /* Pods-NettySocket.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MQ4BAK6QRP;
+				INFOPLIST_FILE = NettySocket/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = R.S.NettySocket;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		52863F6A220139F500353295 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2485860A233762C90FD36441 /* Pods-NettySocket.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MQ4BAK6QRP;
+				INFOPLIST_FILE = NettySocket/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = R.S.NettySocket;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		52863F51220139F300353295 /* Build configuration list for PBXProject "NettySocket" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52863F66220139F500353295 /* Debug */,
+				52863F67220139F500353295 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		52863F68220139F500353295 /* Build configuration list for PBXNativeTarget "NettySocket" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				52863F69220139F500353295 /* Debug */,
+				52863F6A220139F500353295 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 52863F4E220139F300353295 /* Project object */;
+}
