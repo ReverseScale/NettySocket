@@ -11,7 +11,7 @@ import CocoaAsyncSocket
 
 class ClientController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    var socket: GCDAsyncSocket?
+    var tcpSocket: GCDAsyncSocket?
     
     var fileURL: URL!
     var filePath: Any!
@@ -91,10 +91,10 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     @IBAction func connectionAction(_ sender: Any) {
         
-        socket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
+        tcpSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
         
         do {
-            try socket?.connect(toHost: ipTextField.text!, onPort: UInt16(portTexField.text!)!)
+            try tcpSocket?.connect(toHost: ipTextField.text!, onPort: UInt16(portTexField.text!)!)
             addLogText("连接成功")
         }catch _ {
             addLogText("连接失败")
@@ -104,14 +104,14 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     @IBAction func disconnectAction(_ sender: Any) {
         
-        socket?.disconnect()
+        tcpSocket?.disconnect()
         addLogText("断开连接")
         
     }
     
     @IBAction func sendMessageAction(_ sender: Any) {
         
-        socket?.write((messageTextField.text?.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
+        tcpSocket?.write((messageTextField.text?.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
         addLogText("我发送了：\(messageTextField.text!)")
         messageTextField.text = ""
 
@@ -188,7 +188,7 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
         mData.append(data as Data)
         
         print("mData.length \(mData.length)")
-        socket?.write(mData as Data, withTimeout: -1, tag: 0)
+        tcpSocket?.write(mData as Data, withTimeout: -1, tag: 0)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -202,7 +202,7 @@ extension ClientController: GCDAsyncSocketDelegate {
     
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         addLogText("连接服务器" + host)
-        self.socket?.readData(withTimeout: -1, tag: 0)
+        self.tcpSocket?.readData(withTimeout: -1, tag: 0)
     }
     
     func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {

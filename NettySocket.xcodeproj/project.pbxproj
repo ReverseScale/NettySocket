@@ -17,6 +17,8 @@
 		52863F7222016B5400353295 /* ClientController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7022016B5400353295 /* ClientController.swift */; };
 		52863F7322016B5400353295 /* ServerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7122016B5400353295 /* ServerController.swift */; };
 		52863F76220182C600353295 /* Test.proto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F75220182C600353295 /* Test.proto.swift */; };
+		52863F7A2202E71100353295 /* IMSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F792202E71100353295 /* IMSocketManager.swift */; };
+		52863F7D2202E80700353295 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7C2202E80700353295 /* Logger.swift */; };
 		7B2676336B3D264E01C61BC8 /* Pods_NettySocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E459F342AF127BE33B558B4 /* Pods_NettySocket.framework */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +36,8 @@
 		52863F7022016B5400353295 /* ClientController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientController.swift; sourceTree = "<group>"; };
 		52863F7122016B5400353295 /* ServerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerController.swift; sourceTree = "<group>"; };
 		52863F75220182C600353295 /* Test.proto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Test.proto.swift; sourceTree = "<group>"; };
+		52863F792202E71100353295 /* IMSocketManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSocketManager.swift; sourceTree = "<group>"; };
+		52863F7C2202E80700353295 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		6E459F342AF127BE33B558B4 /* Pods_NettySocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NettySocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2370E415D2EE5B86F712B0D /* Pods-NettySocket.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NettySocket.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -92,8 +96,10 @@
 				52863F5B220139F400353295 /* ViewController.swift */,
 				52863F6C220141FF00353295 /* SwiftSocketController.swift */,
 				52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */,
+				52863F792202E71100353295 /* IMSocketManager.swift */,
 				52863F7122016B5400353295 /* ServerController.swift */,
 				52863F7022016B5400353295 /* ClientController.swift */,
+				52863F7B2202E7F100353295 /* Help */,
 				52863F74220182B400353295 /* ProtocolBuffer */,
 				52863F5D220139F400353295 /* Main.storyboard */,
 				52863F60220139F500353295 /* Assets.xcassets */,
@@ -109,6 +115,14 @@
 				52863F75220182C600353295 /* Test.proto.swift */,
 			);
 			path = ProtocolBuffer;
+			sourceTree = "<group>";
+		};
+		52863F7B2202E7F100353295 /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				52863F7C2202E80700353295 /* Logger.swift */,
+			);
+			path = Help;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,7 +251,9 @@
 			files = (
 				52863F6D220141FF00353295 /* SwiftSocketController.swift in Sources */,
 				52863F5C220139F400353295 /* ViewController.swift in Sources */,
+				52863F7A2202E71100353295 /* IMSocketManager.swift in Sources */,
 				52863F6F2201455C00353295 /* CocoaAsyncSocketController.swift in Sources */,
+				52863F7D2202E80700353295 /* Logger.swift in Sources */,
 				52863F7322016B5400353295 /* ServerController.swift in Sources */,
 				52863F7222016B5400353295 /* ClientController.swift in Sources */,
 				52863F76220182C600353295 /* Test.proto.swift in Sources */,
