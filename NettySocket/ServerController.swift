@@ -81,8 +81,7 @@ extension ServerController: GCDAsyncSocketDelegate {
         addLogText("端口号：" + String(newSocket.connectedPort))
         clientSocket = newSocket
         
-        clientSocket!.readData(withTimeout: -1, tag: 0)
-//        clientSocket!.readData(to: GCDAsyncSocket.crlfData(), withTimeout: -1, tag: 0)
+        clientSocket!.readData(to: GCDAsyncSocket.crlfData(), withTimeout: -1, tag: 0)
 
     }
     
@@ -93,7 +92,6 @@ extension ServerController: GCDAsyncSocketDelegate {
         print("data.count: \(data.count)")
 
         let dataString: String = String(data: data as Data, encoding: String.Encoding.utf8)!
-        addLogText("接收：\(dataString)")
 
         if currentPacketHead.isEmpty {
             
@@ -142,7 +140,9 @@ extension ServerController: GCDAsyncSocketDelegate {
                 serverImageView.image = decodedimage
                 
             } else if type2 == "text" {
-                addLogText(dataString)
+                
+                addLogText("接收：\(dataString)")
+
             } else {
                 
             }

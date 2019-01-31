@@ -164,7 +164,8 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     /// 发消息
     @IBAction func sendMessageAction(_ sender: Any) {
         
-        tcpSocket?.write((messageTextField.text?.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
+        let txtData:Data = (messageTextField.text?.data(using: String.Encoding.utf8))!
+        sendPhotoData(data: txtData as NSData, type: "text")
         addLogText("我发送了：\(messageTextField.text!)")
         messageTextField.text = ""
 
