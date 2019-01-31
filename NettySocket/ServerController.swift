@@ -51,16 +51,6 @@ class ServerController: UIViewController, UIImagePickerControllerDelegate, UINav
 
     }
     
-    @IBAction func openPickerAction(_ sender: Any) {
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
-           let imagePicker = UIImagePickerController()
-           imagePicker.delegate = self
-           imagePicker.sourceType = .photoLibrary
-           imagePicker.allowsEditing = true
-           self.present(imagePicker, animated:true, completion: nil)
-        }
-    }
-    
     @IBAction func sendAction(_ sender: Any) {
         
         let data = messageTextField.text?.data(using: String.Encoding.utf8)
@@ -69,34 +59,6 @@ class ServerController: UIViewController, UIImagePickerControllerDelegate, UINav
         addLogText("发送：\(messageTextField.text!)")
         messageTextField.text = ""
 
-    }
-    
-    /// 选择图片成功后代理
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        // 获取选择的原图
-        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-        
-        
-        filePath = NSTemporaryDirectory() + "savedImage.jpg"
-        
-        print("filepath: \(filePath ?? "")")
-        
-        if let dataToSave = image.jpegData(compressionQuality: 0.5) {
-            fileURL = URL(fileURLWithPath: filePath as! String)
-            do{
-                try dataToSave.write(to: fileURL)
-                print("save Image")
-                serverImageView.image = UIImage(contentsOfFile:filePath as! String)!
-                
-            }catch{
-                print("Can not save Image")
-            }
-        }
-        
-        // 图片控制器退出
-        picker.dismiss(animated: true, completion: {
-            () -> Void in
-        })
     }
 
     func addLogText(_ text: String) {

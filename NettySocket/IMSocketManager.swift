@@ -68,7 +68,7 @@ class IMSocketManager: NSObject {
     func sendMessage(messageString msg: String) {
         if let _data = msg.data(using: .utf8), let _carriageReturn = "\r".data(using: .utf8) {
             tcpSocket?.write(_data, withTimeout: -1, tag: 0)
-//            tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
+            tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
         }
     }
     
@@ -76,7 +76,7 @@ class IMSocketManager: NSObject {
     func sendCommand(command: SocketManagerCommands) {
         if let _data = command.rawValue.data(using: .utf8), let _carriageReturn = "\r".data(using: .utf8) {
             tcpSocket?.write(_data, withTimeout: -1, tag: 0)
-            tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
+//            tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
         }
     }
     
@@ -115,17 +115,16 @@ class IMSocketManager: NSObject {
 extension IMSocketManager: GCDAsyncSocketDelegate {
     /// 连接并准备好读写时调用
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
-        tcpSocket?.readData(withTimeout: -1, tag: 0)
         delegate?.socketManager(didConnectToHost: host, port: port)
+        sock.readData(withTimeout: -1, tag: 0)
     }
     
     /// 完成将请求的数据读入内存时调用
     func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
-        tcpSocket?.readData(withTimeout: -1, tag: 0)
-        
         if let stringData = String(bytes: data, encoding: .utf8) {
             delegate?.socketManager(didReadString: stringData, withTag: tag)
         }
+        sock.readData(withTimeout: -1, tag: 0)
     }
     
     /// 完成写入请求的数据
