@@ -82,6 +82,8 @@ extension ServerController: GCDAsyncSocketDelegate {
         clientSocket = newSocket
         
         clientSocket!.readData(withTimeout: -1, tag: 0)
+//        clientSocket!.readData(to: GCDAsyncSocket.crlfData(), withTimeout: -1, tag: 0)
+
     }
     
     /// 完成将请求的数据读入内存时调用
@@ -97,7 +99,7 @@ extension ServerController: GCDAsyncSocketDelegate {
             
             print(count)
             print("currentPacketHead.isEmpty")
-            print(dataString)
+//            print(dataString)
             
             do {
                 currentPacketHead = try JSONSerialization.jsonObject(with: data , options: JSONSerialization.ReadingOptions.allowFragments) as! [String : AnyObject]
