@@ -1,24 +1,33 @@
 //
-//  ServerViewController.swift
-//  testSocket
+//  ServerController.swift
+//  NettySocket
 //
-//  Created by BobChang on 18/05/2017.
-//  Copyright © 2017 iirlab. All rights reserved.
+//  Created by Steven Xie on 2019/1/30.
+//  Copyright © 2019 Steven Xie. All rights reserved.
 //
 
 import UIKit
 import CocoaAsyncSocket
 
-class ServerController: UIViewController {
+class ServerController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var serverSocket: GCDAsyncSocket?
     var clientSocket: GCDAsyncSocket?
+    
+    var fileURL: URL!
+    var filePath: Any!
+    
+    var count = 0
+    var currentPacketHead: [String:AnyObject] = [:]
+    var packetLength: UInt!
     
     @IBOutlet weak var portTextField: UITextField!
     
     @IBOutlet weak var messageTextField: UITextField!
     
     @IBOutlet weak var logsTextView: UITextView!
+    
+    @IBOutlet weak var serverImageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +51,16 @@ class ServerController: UIViewController {
 
     }
     
+    @IBAction func openPickerAction(_ sender: Any) {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
+           let imagePicker = UIImagePickerController()
+           imagePicker.delegate = self
+           imagePicker.sourceType = .photoLibrary
+           imagePicker.allowsEditing = true
+           self.present(imagePicker, animated:true, completion: nil)
+        }
+    }
+    
     @IBAction func sendAction(_ sender: Any) {
         
         let data = messageTextField.text?.data(using: String.Encoding.utf8)
@@ -51,9 +70,42 @@ class ServerController: UIViewController {
         messageTextField.text = ""
 
     }
+    
+    /// 选择图片成功后代理
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        // 获取选择的原图
+        let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
+        
+        
+        filePath = NSTemporaryDirectory() + "savedImage.jpg"
+        
+        print("filepath: \(filePath ?? "")")
+        
+        if let dataToSave = image.jpegData(compressionQuality: 0.5) {
+            fileURL = URL(fileURLWithPath: filePath as! String)
+            do{
+                try dataToSave.write(to: fileURL)
+                print("save Image")
+                serverImageView.image = UIImage(contentsOfFile:filePath as! String)!
+                
+            }catch{
+                print("Can not save Image")
+            }
+        }
+        
+        // 图片控制器退出
+        picker.dismiss(animated: true, completion: {
+            () -> Void in
+        })
+    }
 
     func addLogText(_ text: String) {
         logsTextView.text = logsTextView.text.appendingFormat("%@\n", text)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        portTextField.resignFirstResponder()
+        messageTextField.resignFirstResponder()
     }
 }
 
@@ -72,12 +124,84 @@ extension ServerController: GCDAsyncSocketDelegate {
     
     /// Socket 完成将请求的数据读入内存时调用
     func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
-        let message = String(data: data,encoding: String.Encoding.utf8)
-        addLogText("接收：\(message!)")
+        
+        count = count + 1
+        print("data.count: \(data.count)")
 
-        sock.readData(withTimeout: -1, tag: 0)
+        let dataString: String = String(data: data as Data, encoding: String.Encoding.utf8)!
+        addLogText("接收：\(dataString)")
+
+        if currentPacketHead.isEmpty {
+            
+            print(count)
+            print("currentPacketHead.isEmpty")
+            print(dataString)
+            
+            do {
+                currentPacketHead = try JSONSerialization.jsonObject(with: data , options: JSONSerialization.ReadingOptions.allowFragments) as! [String : AnyObject]
+                let type:String = currentPacketHead["type"] as! String
+                print("type \(type)")
+                
+                if currentPacketHead.isEmpty {
+                    print("error:currentPacketHead.isEmpty")
+                    return
+                }
+                packetLength = currentPacketHead["size"] as? UInt
+                print("packet Length: \(packetLength ?? 0)")
+                sock.readData(toLength: UInt(packetLength), withTimeout: -1, tag: 0)
+                return
+                
+            }catch let error as NSError {
+                print(error)
+            }
+            
+        } else {
+            
+            print(count)
+            print("currentPacketHead not Empty")
+            //print(dataString)
+            
+            
+            let packetLength2:UInt = currentPacketHead["size"] as! UInt
+            
+            if UInt(data.count) != packetLength2 {
+                return;
+            }
+            var type2:String = currentPacketHead["type"] as! String
+            print("type2 \(type2)")
+            
+            if type2 == "image" {
+                
+                let jsondic:[String:AnyObject] = convertStringToDictionary(text: dataString)!
+                let strBase64 = jsondic["image"] as! String
+                let dataDecoded:NSData = NSData(base64Encoded: strBase64 , options: NSData.Base64DecodingOptions(rawValue: 0))!
+                let decodedimage:UIImage = UIImage(data: dataDecoded as Data)!
+                serverImageView.image = decodedimage
+                
+            }else if type2 == "text"{
+                addLogText(dataString)
+            }else{
+                
+            }
+            
+            currentPacketHead = [:]
+            
+        }
+        
+        sock.readData(to: GCDAsyncSocket.crlfData(), withTimeout: -1, tag: 0)
+
     }
     
+    func convertStringToDictionary(text: String) -> [String:AnyObject]? {
+        if let data = text.data(using: String.Encoding.utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: data, options: [JSONSerialization.ReadingOptions.init(rawValue: 0)]) as? [String:AnyObject]
+            } catch let error as NSError {
+                print(error)
+            }
+        }
+        return nil
+    }
 }
 
 extension ServerController: UITextFieldDelegate {
