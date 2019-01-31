@@ -66,17 +66,17 @@ class IMSocketManager: NSObject {
     /// - Parameter msg: 消息字符串
     /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据(刷新)
     func sendMessage(messageString msg: String) {
-        if let _data = msg.data(using: .utf8), let _carriageReturn = "\r".data(using: .utf8) {
-            tcpSocket?.write(_data, withTimeout: -1, tag: 0)
-            tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
+        if let data = msg.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
+            sendPhotoData(data: data as NSData, type: "text")
+            tcpSocket?.write(carriageReturn, withTimeout: -1, tag: 99)
         }
     }
     
     /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据
     func sendCommand(command: SocketManagerCommands) {
-        if let _data = command.rawValue.data(using: .utf8), let _carriageReturn = "\r".data(using: .utf8) {
-            tcpSocket?.write(_data, withTimeout: -1, tag: 0)
-//            tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
+        if let data = command.rawValue.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
+            tcpSocket?.write(data, withTimeout: -1, tag: 0)
+            tcpSocket?.write(carriageReturn, withTimeout: -1, tag: 99)
         }
     }
     

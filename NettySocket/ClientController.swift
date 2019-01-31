@@ -52,7 +52,7 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
         self.portTexField.delegate = self
         self.messageTextField.delegate = self
         
-//        start()
+        start()
         
         builderHandleData()
     }
@@ -95,22 +95,22 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     /// 处理要发送图片
     @IBAction func sendImageAction(_ sender: Any) {
         
-        let uploadimg = serverImageView.image
-        imageData = uploadimg!.jpegData(compressionQuality: 1) //UIImage to NSData
-        let imageData_Base64str = imageData.base64EncodedString()  //NSData to string
-        imageDict["image"] = imageData_Base64str    // dictionary
-
-        test7str = convertDictionaryToString(dict: imageDict as [String : AnyObject])
-
-        test7data = test7str.data(using: String.Encoding.utf8)
-
-        sendPhotoData(data: test7data as NSData, type: "image")
-        
-        serverImageView.image = nil
-        
-//        IMSocketManager.shared.sendImageMessage(messageImage: serverImageView.image!)
+//        let uploadimg = serverImageView.image
+//        imageData = uploadimg!.jpegData(compressionQuality: 1) //UIImage to NSData
+//        let imageData_Base64str = imageData.base64EncodedString()  //NSData to string
+//        imageDict["image"] = imageData_Base64str    // dictionary
+//
+//        test7str = convertDictionaryToString(dict: imageDict as [String : AnyObject])
+//
+//        test7data = test7str.data(using: String.Encoding.utf8)
+//
+//        sendPhotoData(data: test7data as NSData, type: "image")
 //
 //        serverImageView.image = nil
+        
+        IMSocketManager.shared.sendImageMessage(messageImage: serverImageView.image!)
+
+        serverImageView.image = nil
 
     }
     
@@ -134,17 +134,18 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     /// 连接
     @IBAction func connectionAction(_ sender: Any) {
         
-        tcpSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
-
-        do {
-            try tcpSocket?.connect(toHost: "192.168.125.4", onPort: UInt16(portTexField.text!)!)
-            addLogText("连接成功")
-        }catch _ {
-            addLogText("连接失败")
-        }
+//        tcpSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
+//
+//        do {
+//            try tcpSocket?.connect(toHost: "192.168.125.4", onPort: UInt16(portTexField.text!)!)
+//            addLogText("连接成功")
+//        }catch _ {
+//            addLogText("连接失败")
+//        }
         
-//        updateViews(byConnectionState: .connecting)
-//        IMSocketManager.shared.connect(host: kSocketHost, port: kSocketPort)
+        updateViews(byConnectionState: .connecting)
+        IMSocketManager.shared.connect(host: kSocketHost, port: kSocketPort)
+        
 //        IMSocketManager.shared.connect(host: ipTextField.text!, port: UInt16(portTexField.text!)!)
 
     }
@@ -152,28 +153,28 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     /// 断开
     @IBAction func disconnectAction(_ sender: Any) {
         
-        tcpSocket?.disconnect()
-        addLogText("断开连接")
-        
-//        updateViews(byConnectionState: .disconnected)
-//        IMSocketManager.shared.disconnect()
+//        tcpSocket?.disconnect()
 //        addLogText("断开连接")
+        
+        updateViews(byConnectionState: .disconnected)
+        IMSocketManager.shared.disconnect()
+        addLogText("断开连接")
 
     }
     
     /// 发消息
     @IBAction func sendMessageAction(_ sender: Any) {
         
-        let txtData:Data = (messageTextField.text?.data(using: String.Encoding.utf8))!
-        sendPhotoData(data: txtData as NSData, type: "text")
-        addLogText("我发送了：\(messageTextField.text!)")
-        messageTextField.text = ""
+//        let txtData:Data = (messageTextField.text?.data(using: String.Encoding.utf8))!
+//        sendPhotoData(data: txtData as NSData, type: "text")
+//        addLogText("我发送了：\(messageTextField.text!)")
+//        messageTextField.text = ""
 
-//        if let messageString = messageTextField.text, !messageString.isEmpty {
-//            IMSocketManager.shared.sendMessage(messageString: messageString)
-//            addLogText("我发送了：\(messageTextField.text!)")
-//            messageTextField.text = ""
-//        }
+        if let messageString = messageTextField.text, !messageString.isEmpty {
+            IMSocketManager.shared.sendMessage(messageString: messageString)
+            addLogText("我发送了：\(messageTextField.text!)")
+            messageTextField.text = ""
+        }
     }
     
     /// 选择图片成功后代理
@@ -263,21 +264,21 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     }
 }
 
-extension ClientController: GCDAsyncSocketDelegate {
-    
-    func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
-        addLogText("连接服务器" + host)
-        self.tcpSocket?.readData(withTimeout: -1, tag: 0)
-    }
-
-    func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
-        let message = String(data: data,encoding: String.Encoding.utf8)
-        addLogText("接收：\(message!)")
-
-        sock.readData(withTimeout: -1, tag: 0)
-    }
-    
-}
+//extension ClientController: GCDAsyncSocketDelegate {
+//
+//    func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
+//        addLogText("连接服务器" + host)
+//        self.tcpSocket?.readData(withTimeout: -1, tag: 0)
+//    }
+//
+//    func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
+//        let message = String(data: data,encoding: String.Encoding.utf8)
+//        addLogText("接收：\(message!)")
+//
+//        sock.readData(withTimeout: -1, tag: 0)
+//    }
+//
+//}
 
 extension ClientController: UITextFieldDelegate {
     
