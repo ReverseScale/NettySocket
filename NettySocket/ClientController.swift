@@ -26,7 +26,7 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     //MARK: - Properties
     fileprivate let kSocketHost: String = "192.168.20.95"
-    fileprivate let kSocketPort: UInt16 = 8989
+    fileprivate let kSocketPort: UInt16 = 9999
     
     //MARK: - IBOutlet's
     @IBOutlet weak var ipTextField: UITextField!
