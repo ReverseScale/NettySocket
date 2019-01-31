@@ -24,6 +24,11 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     var imageData: Data!
     var imageDict: [String:Any] = [:]
     
+    //MARK: - Properties
+    fileprivate let kSocketHost: String = "192.168.20.95"
+    fileprivate let kSocketPort: UInt16 = 8989
+    
+    //MARK: - IBOutlet's
     @IBOutlet weak var ipTextField: UITextField!
     
     @IBOutlet weak var portTexField: UITextField!
@@ -34,6 +39,10 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     @IBOutlet weak var serverImageView: UIImageView!
     
+    @IBOutlet weak var stateView: UIView!
+    
+    @IBOutlet weak var stateLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,10 +52,21 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
         self.portTexField.delegate = self
         self.messageTextField.delegate = self
         
-        serializationData()
+        start()
+        
+        builderHandleData()
     }
     
-    func serializationData() {
+    private func start() {
+        setupDelegates()
+    }
+    
+    private func setupDelegates() {
+        IMSocketManager.shared.delegate = self
+    }
+    
+    /// builder 处理
+    func builderHandleData() {
         
         let person = Person.Builder()
         person.name = "南小鸟"
@@ -54,13 +74,14 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
         person.friends = [10]
         
         let data = person.getMessage().data()
-
         let result = try! Person.parseFrom(data: data)
 
         print(result)
     }
     
+    /// 获取相册资源
     @IBAction func openPickerAction(_ sender: Any) {
+        
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
@@ -68,53 +89,89 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
             imagePicker.allowsEditing = true
             self.present(imagePicker, animated:true, completion: nil)
         }
+        
     }
     
+    /// 处理要发送图片
     @IBAction func sendImageAction(_ sender: Any) {
-        let uploadimg = serverImageView.image
-        imageData = uploadimg!.jpegData(compressionQuality: 1) //UIImage to NSData
-        let imageData_Base64str = imageData.base64EncodedString()  //NSData to string
-        imageDict["image"] = imageData_Base64str    // dictionary
         
-        test7str = convertDictionaryToString(dict: imageDict as [String : AnyObject])
-        //print(test7str)
-        //7-2
-        test7data = test7str.data(using: String.Encoding.utf8)
-        //print(test7data)
-        //7-3
-        //socket?.write(test7data, withTimeout: -1, tag: 0)
-        //7-4
-        sendPhotoData(data: test7data as NSData, type: "image")
+//        let uploadimg = serverImageView.image
+//        imageData = uploadimg!.jpegData(compressionQuality: 1) //UIImage to NSData
+//        let imageData_Base64str = imageData.base64EncodedString()  //NSData to string
+//        imageDict["image"] = imageData_Base64str    // dictionary
+//
+//        test7str = convertDictionaryToString(dict: imageDict as [String : AnyObject])
+//
+//        test7data = test7str.data(using: String.Encoding.utf8)
+//
+//        sendPhotoData(data: test7data as NSData, type: "image")
         
-        serverImageView.image = nil          //送出後移除image
+//        serverImageView.image = nil
+        
+        IMSocketManager.shared.sendImageMessage(messageImage: serverImageView.image!)
+        
+        serverImageView.image = nil
+
     }
     
+    /// 发送图片数据
+    func sendPhotoData(data: NSData,type: String){
+        let size = data.length
+        addLogText("size:\(size)")
+        var headDic: [String:Any] = [:]
+        headDic["type"] = type
+        headDic["size"] = size
+        let jsonStr = convertDictionaryToString(dict: headDic as [String : AnyObject])
+        let lengthData = jsonStr.data(using: String.Encoding.utf8)
+        mData = NSMutableData.init(data: lengthData!)
+        mData.append(GCDAsyncSocket.crlfData())
+        mData.append(data as Data)
+        
+        print("mData.length \(mData.length)")
+        tcpSocket?.write(mData as Data, withTimeout: -1, tag: 0)
+    }
+    
+    /// 连接
     @IBAction func connectionAction(_ sender: Any) {
         
-        tcpSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
+//        tcpSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
+//
+//        do {
+//            try tcpSocket?.connect(toHost: ipTextField.text!, onPort: UInt16(portTexField.text!)!)
+//            addLogText("连接成功")
+//        }catch _ {
+//            addLogText("连接失败")
+//        }
         
-        do {
-            try tcpSocket?.connect(toHost: ipTextField.text!, onPort: UInt16(portTexField.text!)!)
-            addLogText("连接成功")
-        }catch _ {
-            addLogText("连接失败")
-        }
+        updateViews(byConnectionState: .connecting)
+        IMSocketManager.shared.connect(host: kSocketHost, port: kSocketPort)
 
     }
     
+    /// 断开
     @IBAction func disconnectAction(_ sender: Any) {
         
-        tcpSocket?.disconnect()
-        addLogText("断开连接")
+//        tcpSocket?.disconnect()
+//        addLogText("断开连接")
         
+        updateViews(byConnectionState: .disconnected)
+        IMSocketManager.shared.disconnect()
+        addLogText("断开连接")
+
     }
     
+    /// 发消息
     @IBAction func sendMessageAction(_ sender: Any) {
         
-        tcpSocket?.write((messageTextField.text?.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
-        addLogText("我发送了：\(messageTextField.text!)")
-        messageTextField.text = ""
+//        tcpSocket?.write((messageTextField.text?.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
+//        addLogText("我发送了：\(messageTextField.text!)")
+//        messageTextField.text = ""
 
+        if let messageString = messageTextField.text, !messageString.isEmpty {
+            IMSocketManager.shared.sendMessage(messageString: messageString)
+            addLogText("我发送了：\(messageTextField.text!)")
+            messageTextField.text = ""
+        }
     }
     
     /// 选择图片成功后代理
@@ -145,6 +202,7 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
         })
     }
 
+    /// 打印日志
     func addLogText(_ text: String) {
         logsTextView.text = logsTextView.text.appendingFormat("%@\n", text)
     }
@@ -175,49 +233,79 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
         return nil
     }
     
-    func sendPhotoData(data:NSData,type:String){
-        let size = data.length
-        addLogText("size:\(size)")
-        var headDic: [String:Any] = [:]
-        headDic["type"] = type
-        headDic["size"] = size
-        let jsonStr = convertDictionaryToString(dict: headDic as [String : AnyObject])
-        let lengthData = jsonStr.data(using: String.Encoding.utf8)
-        mData = NSMutableData.init(data: lengthData!)
-        mData.append(GCDAsyncSocket.crlfData())
-        mData.append(data as Data)
-        
-        print("mData.length \(mData.length)")
-        tcpSocket?.write(mData as Data, withTimeout: -1, tag: 0)
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         ipTextField.resignFirstResponder()
         portTexField.resignFirstResponder()
         messageTextField.resignFirstResponder()
     }
+    
+    fileprivate func updateViews(byConnectionState connectionState: ConnectionState) {
+        switch connectionState {
+        case .connecting:
+            stateView.backgroundColor = .orange
+            stateLabel.text = "连接"
+            break
+        case .connected:
+            stateView.backgroundColor = .green
+            stateLabel.text = "在线"
+            break
+        case .disconnected:
+            stateView.backgroundColor = .gray
+            stateLabel.text = "断开"
+            break
+        case .failedToConnect:
+            stateView.backgroundColor = .red
+            stateLabel.text = "错误"
+            break
+        }
+    }
 }
 
 extension ClientController: GCDAsyncSocketDelegate {
     
-    func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
-        addLogText("连接服务器" + host)
-        self.tcpSocket?.readData(withTimeout: -1, tag: 0)
-    }
-    
-    func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
-        let message = String(data: data,encoding: String.Encoding.utf8)
-        addLogText("接收：\(message!)")
-
-        sock.readData(withTimeout: -1, tag: 0)
-    }
+//    func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
+//        addLogText("连接服务器" + host)
+//        self.tcpSocket?.readData(withTimeout: -1, tag: 0)
+//    }
+//
+//    func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
+//        let message = String(data: data,encoding: String.Encoding.utf8)
+//        addLogText("接收：\(message!)")
+//
+//        sock.readData(withTimeout: -1, tag: 0)
+//    }
     
 }
 
 extension ClientController: UITextFieldDelegate {
+    
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
         textField.resignFirstResponder()
         return true
+    }
+    
+}
+
+extension ClientController: IMSocketManagerDelegate {
+    func socketManager(didConnectToHost host: String, port: UInt16) {
+        addLogText("连接成功")
+        Logger(identifier: #file, message: "Connected to host: \(host), port: \(port)")
+        updateViews(byConnectionState: .connected)
+    }
+    
+    func socketManager(didDisconnectWithError err: Error?) {
+        Logger(identifier: #file, message: "Socket disconnected with error: \(err?.localizedDescription ?? "")")
+        updateViews(byConnectionState: .disconnected)
+    }
+    
+    func socketManager(didReadString data: String, withTag tag: Int) {
+        addLogText("接收：\(data)")
+    }
+    
+    func socketManager(didFailToConnect failureMsg: String) {
+        addLogText("连接失败")
+        Logger(identifier: #file, message: "Failed to connect with failure message: \(failureMsg)")
+        updateViews(byConnectionState: .failedToConnect)
     }
 }

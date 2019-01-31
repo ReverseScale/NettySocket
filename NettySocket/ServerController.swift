@@ -111,18 +111,18 @@ class ServerController: UIViewController, UIImagePickerControllerDelegate, UINav
 
 extension ServerController: GCDAsyncSocketDelegate {
 
-    /// Socket 接受连接时调用
+    /// 接受连接时调用
     func socket(_ sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
         
         addLogText("连接成功")
-        addLogText("连接地址" + newSocket.connectedHost!)
-        addLogText("端口号" + String(newSocket.connectedPort))
+        addLogText("连接地址：" + newSocket.connectedHost!)
+        addLogText("端口号：" + String(newSocket.connectedPort))
         clientSocket = newSocket
         
         clientSocket!.readData(withTimeout: -1, tag: 0)
     }
     
-    /// Socket 完成将请求的数据读入内存时调用
+    /// 完成将请求的数据读入内存时调用
     func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         
         count = count + 1
@@ -151,7 +151,7 @@ extension ServerController: GCDAsyncSocketDelegate {
                 sock.readData(toLength: UInt(packetLength), withTimeout: -1, tag: 0)
                 return
                 
-            }catch let error as NSError {
+            } catch let error as NSError {
                 print(error)
             }
             
@@ -161,13 +161,12 @@ extension ServerController: GCDAsyncSocketDelegate {
             print("currentPacketHead not Empty")
             //print(dataString)
             
-            
             let packetLength2:UInt = currentPacketHead["size"] as! UInt
             
             if UInt(data.count) != packetLength2 {
                 return;
             }
-            var type2:String = currentPacketHead["type"] as! String
+            let type2:String = currentPacketHead["type"] as! String
             print("type2 \(type2)")
             
             if type2 == "image" {
@@ -178,9 +177,9 @@ extension ServerController: GCDAsyncSocketDelegate {
                 let decodedimage:UIImage = UIImage(data: dataDecoded as Data)!
                 serverImageView.image = decodedimage
                 
-            }else if type2 == "text"{
+            } else if type2 == "text" {
                 addLogText(dataString)
-            }else{
+            } else {
                 
             }
             

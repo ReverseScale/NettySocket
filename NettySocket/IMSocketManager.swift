@@ -20,10 +20,14 @@ enum ConnectionState: String {
     case failedToConnect = "Failed to connect to host."
 }
 
-protocol SocketManagerDelegate: class {
+protocol IMSocketManagerDelegate: class {
+    /// 连接并准备好读写时调用
     func socketManager(didConnectToHost host: String, port: UInt16)
+    /// 断开连接时调用
     func socketManager(didDisconnectWithError err: Error?)
+    /// 完成将请求的数据读入内存时调用
     func socketManager(didReadString data: String, withTag tag: Int)
+    /// 连接错误时调用
     func socketManager(didFailToConnect failureMsg: String)
 }
 
@@ -33,9 +37,11 @@ class IMSocketManager: NSObject {
     
     private var kSocketHost: String = ""
     private var kSocketPORT: UInt16 = 0
-    private var tcpSocket: GCDAsyncSocket?
-    weak var delegate: SocketManagerDelegate?
     
+    private var tcpSocket: GCDAsyncSocket?
+    weak var delegate: IMSocketManagerDelegate?
+    
+    /// 连接
     func connect(host: String, port: UInt16) {
         self.kSocketHost = host
         self.kSocketPORT = port
@@ -49,27 +55,71 @@ class IMSocketManager: NSObject {
         }
     }
     
+    /// 断开连接
+    func disconnect() {
+        tcpSocket?.disconnect()
+    }
+    
+    
+    /// 发送消息
+    ///
+    /// - Parameter msg: 消息字符串
+    /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据(刷新)
     func sendMessage(messageString msg: String) {
         if let _data = msg.data(using: .utf8), let _carriageReturn = "\r".data(using: .utf8) {
             tcpSocket?.write(_data, withTimeout: -1, tag: 0)
-            tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
+//            tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
         }
     }
     
+    /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据
     func sendCommand(command: SocketManagerCommands) {
         if let _data = command.rawValue.data(using: .utf8), let _carriageReturn = "\r".data(using: .utf8) {
             tcpSocket?.write(_data, withTimeout: -1, tag: 0)
             tcpSocket?.write(_carriageReturn, withTimeout: -1, tag: 99)
         }
     }
+    
+    func sendImageMessage(messageImage img: UIImage) {
+        let imageData = img.jpegData(compressionQuality: 1)
+        let imageData_Base64str = imageData!.base64EncodedString()
+        var imageDict: [String:Any] = [:]
+
+        imageDict["image"] = imageData_Base64str   
+        
+        let test7str = convertDictionaryToString(dict: imageDict as [String : AnyObject])
+        
+        let test7data = test7str.data(using: String.Encoding.utf8)
+        
+        sendPhotoData(data: test7data! as NSData, type: "image")
+    }
+    
+    /// 发送图片数据
+    func sendPhotoData(data: NSData, type: String){
+        let size = data.length
+        print("size:\(size)")
+        var headDic: [String:Any] = [:]
+        headDic["type"] = type
+        headDic["size"] = size
+        let jsonStr = convertDictionaryToString(dict: headDic as [String : AnyObject])
+        let lengthData = jsonStr.data(using: String.Encoding.utf8)
+        let mData = NSMutableData.init(data: lengthData!)
+        mData.append(GCDAsyncSocket.crlfData())
+        mData.append(data as Data)
+        
+        print("mData.length \(mData.length)")
+        tcpSocket?.write(mData as Data, withTimeout: -1, tag: 0)
+    }
 }
 
 extension IMSocketManager: GCDAsyncSocketDelegate {
+    /// 连接并准备好读写时调用
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         tcpSocket?.readData(withTimeout: -1, tag: 0)
         delegate?.socketManager(didConnectToHost: host, port: port)
     }
     
+    /// 完成将请求的数据读入内存时调用
     func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         tcpSocket?.readData(withTimeout: -1, tag: 0)
         
@@ -78,11 +128,33 @@ extension IMSocketManager: GCDAsyncSocketDelegate {
         }
     }
     
+    /// 完成写入请求的数据
     func socket(_ sock: GCDAsyncSocket, didWriteDataWithTag tag: Int) {
         sock.readData(withTimeout: -1, tag: tag)
     }
     
+    /// 断开连接时调用
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
         delegate?.socketManager(didDisconnectWithError: err)
     }
+    
+}
+
+extension IMSocketManager {
+    
+    func convertDictionaryToString(dict:[String:AnyObject]) -> String {
+        var result:String = ""
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions.init(rawValue: 0))
+            
+            if let JSONString = String(data: jsonData, encoding: String.Encoding.utf8) {
+                result = JSONString
+            }
+            
+        } catch {
+            result = ""
+        }
+        return result
+    }
+    
 }
