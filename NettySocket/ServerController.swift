@@ -101,8 +101,8 @@ extension ServerController: GCDAsyncSocketDelegate {
             
             do {
                 currentPacketHead = try JSONSerialization.jsonObject(with: data , options: JSONSerialization.ReadingOptions.allowFragments) as! [String : AnyObject]
-                let type:String = currentPacketHead["type"] as! String
-                print("type \(type)")
+                let type: String = currentPacketHead["type"] as! String
+                print("Message type: \(type)")
                 
                 if currentPacketHead.isEmpty {
                     print("error:currentPacketHead.isEmpty")
@@ -128,10 +128,11 @@ extension ServerController: GCDAsyncSocketDelegate {
             if UInt(data.count) != packetLength2 {
                 return;
             }
-            let type2:String = currentPacketHead["type"] as! String
-            print("type2 \(type2)")
             
-            if type2 == "image" {
+            let type: String = currentPacketHead["type"] as! String
+            print("Message type: \(type)")
+            
+            if type == "image" {
                 
                 let jsondic:[String:AnyObject] = convertStringToDictionary(text: dataString)!
                 let strBase64 = jsondic["image"] as! String
@@ -139,12 +140,15 @@ extension ServerController: GCDAsyncSocketDelegate {
                 let decodedimage:UIImage = UIImage(data: dataDecoded as Data)!
                 serverImageView.image = decodedimage
                 
-            } else if type2 == "text" {
+            } else if type == "text" {
                 
                 addLogText("接收：\(dataString)")
 
-            } else {
+            } else if type == "builder" {
                 
+                let result = try! Person.parseFrom(data: data)
+                
+                addLogText("\(result.name!)-\(result.age!)岁-\(result.friends.first!)个好友")
             }
             
             currentPacketHead = [:]

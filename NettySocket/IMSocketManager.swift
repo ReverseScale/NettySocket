@@ -60,26 +60,29 @@ class IMSocketManager: NSObject {
         tcpSocket?.disconnect()
     }
     
-    
     /// 发送消息
     ///
     /// - Parameter msg: 消息字符串
     /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据(刷新)
     func sendMessage(messageString msg: String) {
         if let data = msg.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
-            sendPhotoData(data: data as NSData, type: "text")
+            sendMessageData(data: data as NSData, type: "text")
             tcpSocket?.write(carriageReturn, withTimeout: -1, tag: 99)
         }
     }
     
-    /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据
-    func sendCommand(command: SocketManagerCommands) {
-        if let data = command.rawValue.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
-            tcpSocket?.write(data, withTimeout: -1, tag: 0)
-            tcpSocket?.write(carriageReturn, withTimeout: -1, tag: 99)
-        }
+    
+    /// 发送 Builder 数据
+    ///
+    /// - Parameter data: Builder data
+    func sendMessage(messageBuilder data: Data) {
+        sendMessageData(data: data as NSData, type: "builder")
     }
     
+    
+    /// 发送图片
+    ///
+    /// - Parameter img: 图片
     func sendImageMessage(messageImage img: UIImage) {
         let imageData = img.jpegData(compressionQuality: 1)
         let imageData_Base64str = imageData!.base64EncodedString()
@@ -91,11 +94,19 @@ class IMSocketManager: NSObject {
         
         let test7data = test7str.data(using: String.Encoding.utf8)
         
-        sendPhotoData(data: test7data! as NSData, type: "image")
+        sendMessageData(data: test7data! as NSData, type: "image")
+    }
+    
+    /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据
+    func sendCommand(command: SocketManagerCommands) {
+        if let data = command.rawValue.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
+            tcpSocket?.write(data, withTimeout: -1, tag: 0)
+            tcpSocket?.write(carriageReturn, withTimeout: -1, tag: 99)
+        }
     }
     
     /// 发送图片数据
-    func sendPhotoData(data: NSData, type: String){
+    func sendMessageData(data: NSData, type: String){
         let size = data.length
         print("size:\(size)")
         var headDic: [String:Any] = [:]
