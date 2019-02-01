@@ -9,19 +9,6 @@
 import UIKit
 import CocoaAsyncSocket
 
-
-
-enum SocketManagerCommands: String {
-    case someComand = "W1"
-}
-
-enum ConnectionState: String {
-    case connecting = "Connecting..."
-    case connected = "Connected"
-    case disconnected = "Disconnected"
-    case failedToConnect = "Failed to connect to host."
-}
-
 protocol IMSocketManagerDelegate: class {
     /// 连接并准备好读写时调用
     func socketManager(didConnectToHost host: String, port: UInt16)
@@ -76,6 +63,15 @@ class IMSocketManager: NSObject {
     /// 断开连接
     func disconnect() {
         tcpSocket?.disconnect()
+    }
+    
+    
+    /// 用户主动重新连接（一般业务都有这个需求：断网后用户下拉）
+    ///
+    /// - Parameter handle: 回调处理
+    public func getReconncetHandle(handle: @escaping reconnetCompletionHandle)  {
+        self.reconncetStatusHandle = handle
+        reconnection()
     }
     
     /// 发送消息
@@ -178,6 +174,56 @@ class IMSocketManager: NSObject {
         }
         sendMessageData(data: data as NSData, type: "Beat")
     }
+    
+    
+    /// 重新连接操作
+    func socketDidDisconectBeginSendReconnect() -> Void {
+        
+        connectStatus = -1
+        
+        if reconnectionCount >= 0 && reconnectionCount < beatLimit  {
+            reconnectionCount = reconnectionCount + 1
+            timerInvalidate(timer: reconnectTimer)
+            let time:TimeInterval = pow(2, Double(reconnectionCount))
+            
+            reconnectTimer = Timer.scheduledTimer(timeInterval: time,
+                                                  target: self,
+                                                  selector: #selector(reconnection),
+                                                  userInfo: nil,
+                                                  repeats: true)
+            RunLoop.current.add(reconnectTimer, forMode: RunLoop.Mode.common)
+            
+        } else {
+            reconnectionCount = -1
+            reconncetStatusHandle?(false)
+            
+            timerInvalidate(timer: reconnectTimer)
+        }
+    }
+    
+    
+    /// 重新连接 在网络状态不佳或者断网情况下把具体情况抛出去处理
+    @objc func reconnection() -> Void {
+        
+        /**
+         在瞬间切换到后台再切回程序时状态某些时候不改变
+         但是未连接，所以添加一个重新连接时先断开连接
+         */
+        if connectStatus != -1 {
+            disconnect()
+        }
+        
+        // 重新初始化连接
+        connect(host: kSocketHost, port: kSocketPORT)
+        
+    }
+    
+    func timerInvalidate(timer: Timer!) -> Void {
+        guard let inTimer = timer else {
+            return
+        }
+        inTimer.invalidate()
+    }
 }
 
 extension IMSocketManager: GCDAsyncSocketDelegate {
@@ -204,6 +250,7 @@ extension IMSocketManager: GCDAsyncSocketDelegate {
     
     /// 断开连接时调用
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
+        socketDidDisconectBeginSendReconnect()
         delegate?.socketManager(didDisconnectWithError: err)
     }
     

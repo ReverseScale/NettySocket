@@ -22,6 +22,18 @@ let timeOut = 10
 fileprivate let kSocketHost: String = "192.168.20.95"
 fileprivate let kSocketPort: UInt16 = 9999
 
+
+enum SocketManagerCommands: String {
+    case someComand = "W1"
+}
+
+enum ConnectionState: String {
+    case connecting = "Connecting..."
+    case connected = "Connected"
+    case disconnected = "Disconnected"
+    case failedToConnect = "Failed to connect to host."
+}
+
 enum SocketRequestType: Int {
     case CmdTypeNone = 0 // 未登录
     case CmdTypeConnectRequest = 1 // 连接请求

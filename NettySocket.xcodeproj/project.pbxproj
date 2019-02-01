@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		525E8FC4220441E600CF1518 /* IMSocketConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E8FC3220441E600CF1518 /* IMSocketConfig.swift */; };
+		525E8FC62204474000CF1518 /* Validate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E8FC52204474000CF1518 /* Validate.swift */; };
 		52863F5A220139F400353295 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F59220139F400353295 /* AppDelegate.swift */; };
 		52863F5C220139F400353295 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F5B220139F400353295 /* ViewController.swift */; };
 		52863F5F220139F400353295 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52863F5D220139F400353295 /* Main.storyboard */; };
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		2485860A233762C90FD36441 /* Pods-NettySocket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NettySocket.release.xcconfig"; path = "Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket.release.xcconfig"; sourceTree = "<group>"; };
 		525E8FC3220441E600CF1518 /* IMSocketConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSocketConfig.swift; sourceTree = "<group>"; };
+		525E8FC52204474000CF1518 /* Validate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validate.swift; sourceTree = "<group>"; };
 		52863F56220139F400353295 /* NettySocket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NettySocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52863F59220139F400353295 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52863F5B220139F400353295 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				52863F7C2202E80700353295 /* Logger.swift */,
+				525E8FC52204474000CF1518 /* Validate.swift */,
 			);
 			path = Help;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				525E8FC62204474000CF1518 /* Validate.swift in Sources */,
 				52863F6D220141FF00353295 /* SwiftSocketController.swift in Sources */,
 				52863F5C220139F400353295 /* ViewController.swift in Sources */,
 				52863F7A2202E71100353295 /* IMSocketManager.swift in Sources */,
