@@ -25,8 +25,8 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     var imageDict: [String:Any] = [:]
     
     //MARK: - Properties
-    fileprivate let kSocketHost: String = "192.168.125.4"
-    fileprivate let kSocketPort: UInt16 = 9999
+//    fileprivate let kSocketHost: String = "192.168.20.95"
+//    fileprivate let kSocketPort: UInt16 = 9999
     
     //MARK: - IBOutlet's
     @IBOutlet weak var ipTextField: UITextField!
@@ -144,9 +144,9 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
 //        }
         
         updateViews(byConnectionState: .connecting)
-        IMSocketManager.shared.connect(host: kSocketHost, port: kSocketPort)
+//        IMSocketManager.shared.connect(host: kSocketHost, port: kSocketPort)
         
-//        IMSocketManager.shared.connect(host: ipTextField.text!, port: UInt16(portTexField.text!)!)
+        IMSocketManager.shared.connect(host: ipTextField.text!, port: UInt16(portTexField.text!)!)
 
     }
     
