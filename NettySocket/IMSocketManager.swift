@@ -9,6 +9,8 @@
 import UIKit
 import CocoaAsyncSocket
 
+
+
 enum SocketManagerCommands: String {
     case someComand = "W1"
 }
@@ -31,9 +33,25 @@ protocol IMSocketManagerDelegate: class {
     func socketManager(didFailToConnect failureMsg: String)
 }
 
+typealias reconnetCompletionHandle = (Bool) ->()
+
 class IMSocketManager: NSObject {
 
     static let shared = IMSocketManager()
+    
+    /// 为了后续业务上用户主动连接处理
+    var reconncetStatusHandle: reconnetCompletionHandle?
+    
+    /// connect status：
+    ///
+    /// 1: connect
+    /// -1: disconnect
+    /// 0: connecting
+    var connectStatus = 0
+    var reconnectionCount = 0
+    
+    var beatTimer:Timer!
+    var reconnectTimer:Timer!
     
     private var kSocketHost: String = ""
     private var kSocketPORT: UInt16 = 0
@@ -105,7 +123,7 @@ class IMSocketManager: NSObject {
         }
     }
     
-    /// 发送图片数据
+    /// 发送数据
     func sendMessageData(data: NSData, type: String){
         let size = data.length
         print("size:\(size)")
@@ -121,12 +139,53 @@ class IMSocketManager: NSObject {
         print("mData.length \(mData.length)")
         tcpSocket?.write(mData as Data, withTimeout: -1, tag: 0)
     }
+    
+    // 长连接建立后 开始与服务器校验登录
+    func socketDidConnectCreatLogin() {
+        let login = ["c":"1","p":"ca5542d60da951afeb3a8bc5152211a7","d":"dev_"]
+        guard let data: Data = try? Data(JSONSerialization.data(withJSONObject: login, options: JSONSerialization.WritingOptions(rawValue: 1))) else {
+            return
+        }
+        sendMessageData(data: data as NSData, type: "Check")
+        
+        reconnectionCount = 0
+        connectStatus = 1
+        reconncetStatusHandle?(true)
+        
+        guard let timer = self.reconnectTimer else {
+            return
+        }
+        timer.invalidate()
+    }
+    
+    
+    /// 长连接建立后 开始发送心跳包
+    func socketDidConnectBeginSendBeat() {
+        beatTimer = Timer.scheduledTimer(timeInterval: TimeInterval(heartBeatTimeinterval),
+                                         target: self,
+                                         selector: #selector(sendBeat),
+                                         userInfo: nil,
+                                         repeats: true)
+        RunLoop.current.add(beatTimer, forMode: RunLoop.Mode.common)
+        
+    }
+    
+    /// 向服务器发送心跳包
+    @objc func sendBeat() {
+        let beat = ["c":"3"]
+        guard let data: Data = try? Data(JSONSerialization.data(withJSONObject: beat, options: JSONSerialization.WritingOptions(rawValue: 1))) else {
+            return
+        }
+        sendMessageData(data: data as NSData, type: "Beat")
+    }
 }
 
 extension IMSocketManager: GCDAsyncSocketDelegate {
     /// 连接并准备好读写时调用
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         delegate?.socketManager(didConnectToHost: host, port: port)
+        socketDidConnectCreatLogin()
+        socketDidConnectBeginSendBeat()
         sock.readData(withTimeout: -1, tag: 0)
     }
     

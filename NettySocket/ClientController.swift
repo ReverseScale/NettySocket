@@ -16,10 +16,6 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     var fileURL: URL!
     var filePath: Any!
     
-    //MARK: - Properties
-//    fileprivate let kSocketHost: String = "192.168.20.95"
-//    fileprivate let kSocketPort: UInt16 = 9999
-    
     //MARK: - IBOutlet's
     @IBOutlet weak var ipTextField: UITextField!
     
