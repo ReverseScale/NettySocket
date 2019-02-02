@@ -90,28 +90,30 @@ extension ServerController: GCDAsyncSocketDelegate {
     func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         
         countIndex = countIndex + 1
+        print("Count: \(countIndex)")
         
-        print("data.count: \(data.count)")
-
-        let dataString: String = String(data: data as Data, encoding: String.Encoding.utf8)!
-
+//        let dataString: String = String(data: data as Data, encoding: String.Encoding.utf8)!
+        print("Data.count: \(data.count)")
+//        print("Data-string: \(dataString)")
+        
         if currentPacketHead.isEmpty {
             
-            print("Count: \(countIndex)")
             print("currentPacketHead.isEmpty")
-//            print(dataString)
             
             do {
                 currentPacketHead = try JSONSerialization.jsonObject(with: data , options: JSONSerialization.ReadingOptions.allowFragments) as! [String : AnyObject]
                 let type: String = currentPacketHead["type"] as! String
+                
                 print("Message type: \(type)")
                 
                 if currentPacketHead.isEmpty {
                     print("error:currentPacketHead.isEmpty")
                     return
                 }
+                
                 packetLength = currentPacketHead["size"] as? UInt
                 print("packet Length: \(packetLength ?? 0)")
+                
                 sock.readData(toLength: UInt(packetLength), withTimeout: -1, tag: 0)
                 return
                 
@@ -121,37 +123,37 @@ extension ServerController: GCDAsyncSocketDelegate {
             
         } else {
             
-            print("Count: \(countIndex)")
             print("currentPacketHead not Empty")
-            //print(dataString)
             
-            let packetLength2:UInt = currentPacketHead["size"] as! UInt
+            let packetLength: UInt = currentPacketHead["size"] as! UInt
             
-            if UInt(data.count) != packetLength2 {
+            if UInt(data.count) != packetLength {
                 return;
             }
             
-            let type: String = currentPacketHead["type"] as! String
-            print("Message type: \(type)")
+            handleMessageType(data: data)
             
-            if type == "image" {
-                
-                let jsondic:[String:AnyObject] = convertStringToDictionary(text: dataString)!
-                let strBase64 = jsondic["image"] as! String
-                let dataDecoded:NSData = NSData(base64Encoded: strBase64 , options: NSData.Base64DecodingOptions(rawValue: 0))!
-                let decodedimage:UIImage = UIImage(data: dataDecoded as Data)!
-                serverImageView.image = decodedimage
-                
-            } else if type == "text" {
-                
-                addLogText("接收：\(dataString)")
-
-            } else if type == "builder" {
-                
-                let result = try! Person.parseFrom(data: data)
-                
-                addLogText("\(result.name!)-\(result.age!)岁-\(result.friends.first!)个好友")
-            }
+//            let type: String = currentPacketHead["type"] as! String
+//            print("Message type: \(type)")
+//
+//            if type == "image" {
+//
+//                let jsondic:[String:AnyObject] = convertStringToDictionary(text: dataString)!
+//                let strBase64 = jsondic["image"] as! String
+//                let dataDecoded:NSData = NSData(base64Encoded: strBase64 , options: NSData.Base64DecodingOptions(rawValue: 0))!
+//                let decodedimage:UIImage = UIImage(data: dataDecoded as Data)!
+//                serverImageView.image = decodedimage
+//
+//            } else if type == "text" {
+//
+//                addLogText("接收：\(dataString)")
+//
+//            } else if type == "builder" {
+//
+//                let result = try! Person.parseFrom(data: data)
+//
+//                addLogText("\(result.name!)-\(result.age!)岁-\(result.friends.first!)个好友")
+//            }
             
             currentPacketHead = [:]
             
@@ -160,6 +162,37 @@ extension ServerController: GCDAsyncSocketDelegate {
         sock.readData(to: GCDAsyncSocket.crlfData(), withTimeout: -1, tag: 0)
         
         print("~~~~~~~~~~~~~~~~~~~~~~~~~Over")
+    }
+    
+    
+    /// 类型消息处理
+    ///
+    /// - Parameter data: 消息数据
+    func handleMessageType(data: Data) {
+        
+        let dataString: String = String(data: data as Data, encoding: String.Encoding.utf8)!
+        
+        let type: String = currentPacketHead["type"] as! String
+        print("Message type: \(type)")
+        
+        if type == "image" {
+            
+            let jsondic:[String:AnyObject] = convertStringToDictionary(text: dataString)!
+            let strBase64 = jsondic["image"] as! String
+            let dataDecoded:NSData = NSData(base64Encoded: strBase64 , options: NSData.Base64DecodingOptions(rawValue: 0))!
+            let decodedimage:UIImage = UIImage(data: dataDecoded as Data)!
+            serverImageView.image = decodedimage
+            
+        } else if type == "text" {
+            
+            addLogText("接收：\(dataString)")
+            
+        } else if type == "builder" {
+            
+            let result = try! Person.parseFrom(data: data)
+            
+            addLogText("\(result.name!)-\(result.age!)岁-\(result.friends.first!)个好友")
+        }
     }
 }
 
