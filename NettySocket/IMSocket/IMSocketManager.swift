@@ -26,34 +26,39 @@ class IMSocketManager: NSObject {
 
     static let shared = IMSocketManager()
     
-    /// 为了后续业务上用户主动连接处理
-    var reconncetStatusHandle: reconnetCompletionHandle?
+    weak var delegate: IMSocketManagerDelegate?
+
+    private var tcpSocket: GCDAsyncSocket?
     
-    /// connect status：
+    /// connect 状态：
     ///
     /// 1: connect
     /// -1: disconnect
     /// 0: connecting
     var connectStatus = 0
+    
+    /// 重连次数
     var reconnectionCount = 0
     
-    var beatTimer:Timer!
+    /// 重连计时
     var reconnectTimer:Timer!
     
-    private var kSocketHost: String = ""
-    private var kSocketPORT: UInt16 = 0
-    
-    private var tcpSocket: GCDAsyncSocket?
-    weak var delegate: IMSocketManagerDelegate?
+    /// 重连闭包回调
+    ///
+    /// 为了后续业务上用户主动连接处理
+    var reconncetStatusHandle: reconnetCompletionHandle?
+
+    /// 心跳包计时
+    var beatTimer:Timer!
     
     /// 连接
     func connect(host: String, port: UInt16) {
-        self.kSocketHost = host
-        self.kSocketPORT = port
+        kSocketHost = host
+        kSocketPort = port
         tcpSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
         
         do {
-            try tcpSocket!.connect(toHost: kSocketHost, onPort: kSocketPORT)
+            try tcpSocket!.connect(toHost: kSocketHost, onPort: kSocketPort)
         } catch let error {
             Logger(identifier: #file, message: error.localizedDescription)
             delegate?.socketManager(didFailToConnect: error.localizedDescription)
@@ -65,7 +70,6 @@ class IMSocketManager: NSObject {
         tcpSocket?.disconnect()
     }
     
-    
     /// 用户主动重新连接（一般业务都有这个需求：断网后用户下拉）
     ///
     /// - Parameter handle: 回调处理
@@ -73,8 +77,18 @@ class IMSocketManager: NSObject {
         self.reconncetStatusHandle = handle
         reconnection()
     }
+}
+
+// MARK: - 业务相关
+extension IMSocketManager {
+    /// 发送 Builder model 消息
+    ///
+    /// - Parameter data: Builder data
+    func sendMessage(messageBuilder data: Data) {
+        sendMessageData(data: data as NSData, type: "builder")
+    }
     
-    /// 发送消息
+    /// 发送纯文本消息
     ///
     /// - Parameter msg: 消息字符串
     /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据(刷新)
@@ -85,24 +99,15 @@ class IMSocketManager: NSObject {
         }
     }
     
-    
-    /// 发送 Builder 数据
-    ///
-    /// - Parameter data: Builder data
-    func sendMessage(messageBuilder data: Data) {
-        sendMessageData(data: data as NSData, type: "builder")
-    }
-    
-    
-    /// 发送图片
+    /// socket 发送图片
     ///
     /// - Parameter img: 图片
     func sendImageMessage(messageImage img: UIImage) {
         let imageData = img.jpegData(compressionQuality: 1)
         let imageData_Base64str = imageData!.base64EncodedString()
         var imageDict: [String:Any] = [:]
-
-        imageDict["image"] = imageData_Base64str   
+        
+        imageDict["image"] = imageData_Base64str
         
         let test7str = convertDictionaryToString(dict: imageDict as [String : AnyObject])
         
@@ -111,32 +116,7 @@ class IMSocketManager: NSObject {
         sendMessageData(data: test7data! as NSData, type: "image")
     }
     
-    /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据
-    func sendCommand(command: SocketManagerCommands) {
-        if let data = command.rawValue.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
-            tcpSocket?.write(data, withTimeout: -1, tag: 0)
-            tcpSocket?.write(carriageReturn, withTimeout: -1, tag: 99)
-        }
-    }
-    
-    /// 发送数据
-    func sendMessageData(data: NSData, type: String){
-        let size = data.length
-        print("size:\(size)")
-        var headDic: [String:Any] = [:]
-        headDic["type"] = type
-        headDic["size"] = size
-        let jsonStr = convertDictionaryToString(dict: headDic as [String : AnyObject])
-        let lengthData = jsonStr.data(using: String.Encoding.utf8)
-        let mData = NSMutableData.init(data: lengthData!)
-        mData.append(GCDAsyncSocket.crlfData())
-        mData.append(data as Data)
-        
-        print("mData.length \(mData.length)")
-        tcpSocket?.write(mData as Data, withTimeout: -1, tag: 0)
-    }
-    
-    // 长连接建立后 开始与服务器校验登录
+    /// 长连接建立后 开始与服务器校验登录
     func socketDidConnectCreatLogin() {
         let login = ["c":"1","p":"ca5542d60da951afeb3a8bc5152211a7","d":"dev_"]
         guard let data: Data = try? Data(JSONSerialization.data(withJSONObject: login, options: JSONSerialization.WritingOptions(rawValue: 1))) else {
@@ -153,8 +133,45 @@ class IMSocketManager: NSObject {
         }
         timer.invalidate()
     }
+}
+
+// MARK: - 保障性机制-防粘包&切包
+extension IMSocketManager {
+    /// 发送数据
+    ///
+    /// - Parameters:
+    ///   - data: 发送的数据
+    ///   - type: 数据类型
+    func sendMessageData(data: NSData, type: String){
+        let size = data.length
+        print("size:\(size)")
+        var headDic: [String:Any] = [:]
+        headDic["type"] = type
+        headDic["size"] = size
+        let jsonStr = convertDictionaryToString(dict: headDic as [String : AnyObject])
+        let lengthData = jsonStr.data(using: String.Encoding.utf8)
+        let mData = NSMutableData.init(data: lengthData!)
+        mData.append(GCDAsyncSocket.crlfData())
+        mData.append(data as Data)
+        
+        print("mData.length \(mData.length)")
+        tcpSocket?.write(mData as Data, withTimeout: -1, tag: 0)
+    }
     
-    
+    /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据
+    ///
+    /// - Parameter command: 标记
+    /// 特殊业务场景下粘包处理
+    func sendCommand(command: SocketManagerCommands) {
+        if let data = command.rawValue.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
+            tcpSocket?.write(data, withTimeout: -1, tag: 0)
+            tcpSocket?.write(carriageReturn, withTimeout: -1, tag: 99)
+        }
+    }
+}
+
+// MARK: - 保障性机制-心跳包
+extension IMSocketManager {
     /// 长连接建立后 开始发送心跳包
     func socketDidConnectBeginSendBeat() {
         beatTimer = Timer.scheduledTimer(timeInterval: TimeInterval(heartBeatTimeinterval),
@@ -173,9 +190,12 @@ class IMSocketManager: NSObject {
             return
         }
         sendMessageData(data: data as NSData, type: "Beat")
+        
     }
-    
-    
+}
+
+// MARK: - 保障性机制-重连
+extension IMSocketManager {
     /// 重新连接操作
     func socketDidDisconectBeginSendReconnect() -> Void {
         
@@ -199,8 +219,8 @@ class IMSocketManager: NSObject {
             
             timerInvalidate(timer: reconnectTimer)
         }
+        
     }
-    
     
     /// 重新连接 在网络状态不佳或者断网情况下把具体情况抛出去处理
     @objc func reconnection() -> Void {
@@ -214,7 +234,7 @@ class IMSocketManager: NSObject {
         }
         
         // 重新初始化连接
-        connect(host: kSocketHost, port: kSocketPORT)
+        connect(host: kSocketHost, port: kSocketPort)
         
     }
     
@@ -226,6 +246,7 @@ class IMSocketManager: NSObject {
     }
 }
 
+// MARK: - GCDAsyncSocketDelegate 代理方法
 extension IMSocketManager: GCDAsyncSocketDelegate {
     /// 连接并准备好读写时调用
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {

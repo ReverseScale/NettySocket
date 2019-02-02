@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		525E8FC4220441E600CF1518 /* IMSocketConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E8FC3220441E600CF1518 /* IMSocketConfig.swift */; };
 		525E8FC62204474000CF1518 /* Validate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E8FC52204474000CF1518 /* Validate.swift */; };
+		525E8FC92205411B00CF1518 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E8FC82205411B00CF1518 /* Handle.swift */; };
 		52863F5A220139F400353295 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F59220139F400353295 /* AppDelegate.swift */; };
 		52863F5C220139F400353295 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F5B220139F400353295 /* ViewController.swift */; };
 		52863F5F220139F400353295 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52863F5D220139F400353295 /* Main.storyboard */; };
@@ -28,6 +29,7 @@
 		2485860A233762C90FD36441 /* Pods-NettySocket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NettySocket.release.xcconfig"; path = "Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket.release.xcconfig"; sourceTree = "<group>"; };
 		525E8FC3220441E600CF1518 /* IMSocketConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSocketConfig.swift; sourceTree = "<group>"; };
 		525E8FC52204474000CF1518 /* Validate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validate.swift; sourceTree = "<group>"; };
+		525E8FC82205411B00CF1518 /* Handle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
 		52863F56220139F400353295 /* NettySocket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NettySocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52863F59220139F400353295 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52863F5B220139F400353295 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -75,6 +77,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		525E8FC7220538EF00CF1518 /* IMSocket */ = {
+			isa = PBXGroup;
+			children = (
+				525E8FC3220441E600CF1518 /* IMSocketConfig.swift */,
+				52863F792202E71100353295 /* IMSocketManager.swift */,
+			);
+			path = IMSocket;
+			sourceTree = "<group>";
+		};
 		52863F4D220139F300353295 = {
 			isa = PBXGroup;
 			children = (
@@ -99,9 +110,8 @@
 				52863F59220139F400353295 /* AppDelegate.swift */,
 				52863F5B220139F400353295 /* ViewController.swift */,
 				52863F6C220141FF00353295 /* SwiftSocketController.swift */,
+				525E8FC7220538EF00CF1518 /* IMSocket */,
 				52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */,
-				52863F792202E71100353295 /* IMSocketManager.swift */,
-				525E8FC3220441E600CF1518 /* IMSocketConfig.swift */,
 				52863F7122016B5400353295 /* ServerController.swift */,
 				52863F7022016B5400353295 /* ClientController.swift */,
 				52863F7B2202E7F100353295 /* Help */,
@@ -127,6 +137,7 @@
 			children = (
 				52863F7C2202E80700353295 /* Logger.swift */,
 				525E8FC52204474000CF1518 /* Validate.swift */,
+				525E8FC82205411B00CF1518 /* Handle.swift */,
 			);
 			path = Help;
 			sourceTree = "<group>";
@@ -266,6 +277,7 @@
 				52863F76220182C600353295 /* Test.proto.swift in Sources */,
 				525E8FC4220441E600CF1518 /* IMSocketConfig.swift in Sources */,
 				52863F5A220139F400353295 /* AppDelegate.swift in Sources */,
+				525E8FC92205411B00CF1518 /* Handle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

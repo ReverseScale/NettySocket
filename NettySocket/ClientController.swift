@@ -167,17 +167,6 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
         return result
     }
     
-    func convertStringToDictionary(text: String) -> [String:AnyObject]? {
-        if let data = text.data(using: String.Encoding.utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: [JSONSerialization.ReadingOptions.init(rawValue: 0)]) as? [String:AnyObject]
-            } catch let error as NSError {
-                print(error)
-            }
-        }
-        return nil
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         ipTextField.resignFirstResponder()
         portTexField.resignFirstResponder()

@@ -17,7 +17,7 @@ class ServerController: UIViewController, UIImagePickerControllerDelegate, UINav
     var fileURL: URL!
     var filePath: Any!
     
-    var count = 0
+    var countIndex = 0
     var currentPacketHead: [String:AnyObject] = [:]
     var packetLength: UInt!
     
@@ -79,6 +79,7 @@ extension ServerController: GCDAsyncSocketDelegate {
         addLogText("连接成功")
         addLogText("连接地址：" + newSocket.connectedHost!)
         addLogText("端口号：" + String(newSocket.connectedPort))
+        
         clientSocket = newSocket
         
         clientSocket!.readData(to: GCDAsyncSocket.crlfData(), withTimeout: -1, tag: 0)
@@ -88,14 +89,15 @@ extension ServerController: GCDAsyncSocketDelegate {
     /// 完成将请求的数据读入内存时调用
     func socket(_ sock: GCDAsyncSocket, didRead data: Data, withTag tag: Int) {
         
-        count = count + 1
+        countIndex = countIndex + 1
+        
         print("data.count: \(data.count)")
 
         let dataString: String = String(data: data as Data, encoding: String.Encoding.utf8)!
 
         if currentPacketHead.isEmpty {
             
-            print(count)
+            print("Count: \(countIndex)")
             print("currentPacketHead.isEmpty")
 //            print(dataString)
             
@@ -119,7 +121,7 @@ extension ServerController: GCDAsyncSocketDelegate {
             
         } else {
             
-            print(count)
+            print("Count: \(countIndex)")
             print("currentPacketHead not Empty")
             //print(dataString)
             
@@ -156,18 +158,8 @@ extension ServerController: GCDAsyncSocketDelegate {
         }
         
         sock.readData(to: GCDAsyncSocket.crlfData(), withTimeout: -1, tag: 0)
-
-    }
-    
-    func convertStringToDictionary(text: String) -> [String:AnyObject]? {
-        if let data = text.data(using: String.Encoding.utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: [JSONSerialization.ReadingOptions.init(rawValue: 0)]) as? [String:AnyObject]
-            } catch let error as NSError {
-                print(error)
-            }
-        }
-        return nil
+        
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~Over")
     }
 }
 
