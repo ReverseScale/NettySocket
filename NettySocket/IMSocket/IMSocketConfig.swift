@@ -33,6 +33,12 @@ enum ConnectionState: String {
     case failedToConnect = "Failed to connect to host."
 }
 
+enum SocketBagType : Int {
+    case BagTypeBeat = 1 //心跳
+    case BagTypeGetConversationsList //获取会话列表
+    case BagTypeConnectionAuthAppraisal = 7 //连接鉴权
+}
+
 enum SocketRequestType: Int {
     case CmdTypeNone = 0 // 未登录
     case CmdTypeConnectRequest = 1 // 连接请求
@@ -48,4 +54,8 @@ enum SocketRequestType: Int {
     case CmdTypeMessage = 11 // 推送更新内容
     case CmdTypeSystemActionRequest = 12 // 系统操作消息
     case CmdTypeActionBack = 13 // 系统操作确认
+    case CmdTypeTimeOut = 14 // 请求超时
+    case CmdTypeParamError = 15 // 参数错误
+    case CmdTypeMaintenanceUpdates = 16 // 用户状态丢失
+    case CmdTypeTokenError = 17 // token 失效
 }

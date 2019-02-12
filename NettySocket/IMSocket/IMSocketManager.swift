@@ -20,6 +20,7 @@ protocol IMSocketManagerDelegate: class {
     func socketManager(didFailToConnect failureMsg: String)
 }
 
+/// 重连闭包
 typealias reconnetCompletionHandle = (Bool) ->()
 
 class IMSocketManager: NSObject {

@@ -56,7 +56,7 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     func builderHandleData() {
         
         let person = Person.Builder()
-        person.name = "南小鸟"
+        person.name = "芭比忑"
         person.age = 18
         person.friends = [10, 20, 30]
         
