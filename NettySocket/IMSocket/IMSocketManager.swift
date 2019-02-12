@@ -36,6 +36,9 @@ class IMSocketManager: NSObject {
     
     var requestsMap: [AnyHashable : Any] = [:]
     
+    var isConnection: Bool = false
+    var connectionType: String?
+    
     /// connect 状态：
     ///
     /// 1: connect
@@ -59,6 +62,7 @@ class IMSocketManager: NSObject {
     
     /// 连接
     func connect(host: String, port: UInt16) {
+        checkConnect()
         kSocketHost = host
         kSocketPort = port
         tcpSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
@@ -83,6 +87,33 @@ class IMSocketManager: NSObject {
         self.reconncetStatusHandle = handle
         reconnection()
     }
+    
+    /// 判断网络通达性 & 网络类型
+    // TODO: 网络环境监听机制
+    func checkConnect() {
+        let reachability = Reachability.init()
+        
+        // 判断连接状态
+        if reachability!.connection != .none {
+            print("网络连接：可用")
+            isConnection = true
+        } else {
+            print("网络连接：不可用")
+            isConnection = false
+        }
+        
+        // 判断连接类型
+        if reachability!.connection == .wifi {
+            print("连接类型：WiFi")
+            connectionType = "WiFi"
+        } else if reachability!.connection == .cellular {
+            print("连接类型：移动网络")
+            connectionType = "Cellular"
+        } else {
+            print("连接类型：没有网络连接")
+            connectionType = "Unknown"
+        }
+    }
 }
 
 // MARK: - 业务相关
@@ -100,16 +131,15 @@ extension IMSocketManager {
     /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据(刷新)
     func sendMessage(messageString msg: String, completion callback: SocketDidReadBlock?) {
         if let data = msg.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
+            checkConnect()
             
-            // TODO: 需要判断网络环境
-            //            if socketManager.connectStatus == -1 {
-            print("socket 未连通")
-            if (callback != nil) {
-                callback!(CallBackError.UnConnectStatus, nil)
+            if !isConnection {
+                print("socket 未连通")
+                if (callback != nil) {
+                    callback!(CallBackError.UnConnectStatus, nil)
+                }
+                return
             }
-            return
-            //            }
-            
             
             let blockRequestID = createRequestID()
             if callback != nil {

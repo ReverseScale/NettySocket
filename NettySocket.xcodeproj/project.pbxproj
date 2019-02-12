@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		522401F72212866300B0EE3D /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522401F62212866300B0EE3D /* Reachability.swift */; };
 		525E8FC4220441E600CF1518 /* IMSocketConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E8FC3220441E600CF1518 /* IMSocketConfig.swift */; };
 		525E8FC62204474000CF1518 /* Validate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E8FC52204474000CF1518 /* Validate.swift */; };
 		525E8FC92205411B00CF1518 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E8FC82205411B00CF1518 /* Handle.swift */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		2485860A233762C90FD36441 /* Pods-NettySocket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NettySocket.release.xcconfig"; path = "Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket.release.xcconfig"; sourceTree = "<group>"; };
+		522401F62212866300B0EE3D /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		525E8FC3220441E600CF1518 /* IMSocketConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IMSocketConfig.swift; sourceTree = "<group>"; };
 		525E8FC52204474000CF1518 /* Validate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validate.swift; sourceTree = "<group>"; };
 		525E8FC82205411B00CF1518 /* Handle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 		525E8FC7220538EF00CF1518 /* IMSocket */ = {
 			isa = PBXGroup;
 			children = (
+				522401F62212866300B0EE3D /* Reachability.swift */,
 				525E8FC3220441E600CF1518 /* IMSocketConfig.swift */,
 				52863F792202E71100353295 /* IMSocketManager.swift */,
 			);
@@ -278,6 +281,7 @@
 				525E8FC4220441E600CF1518 /* IMSocketConfig.swift in Sources */,
 				52863F5A220139F400353295 /* AppDelegate.swift in Sources */,
 				525E8FC92205411B00CF1518 /* Handle.swift in Sources */,
+				522401F72212866300B0EE3D /* Reachability.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
