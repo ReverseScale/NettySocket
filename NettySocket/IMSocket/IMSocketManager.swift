@@ -34,8 +34,13 @@ class IMSocketManager: NSObject {
     
     private var tcpSocket: GCDAsyncSocket?
     
+    /// Request id 集合数组
     var requestsMap: [AnyHashable : Any] = [:]
     
+    /// 网络环境状态监听
+    var reachability: Reachability?
+    
+    /// 网络环境状态
     var isConnection: Bool = false
     var connectionType: String?
     
@@ -88,31 +93,127 @@ class IMSocketManager: NSObject {
         reconnection()
     }
     
-    /// 判断网络通达性 & 网络类型
-    // TODO: 网络环境监听机制
+    deinit {
+        stopNotifier()
+    }
+}
+
+// MARK: - 网络环境监听处理
+extension IMSocketManager {
+    /// 判断网络通达性 & 设置通知
     func checkConnect() {
-        let reachability = Reachability.init()
-        
-        // 判断连接状态
-        if reachability!.connection != .none {
-            print("网络连接：可用")
-            isConnection = true
+        stopNotifier()
+        setupReachability("baidu.com", isUseClosures: true)
+        startNotifier()
+    }
+    
+    /// 配置监听参数
+    ///
+    /// - Parameters:
+    ///   - hostName: hostName
+    ///   - isUseClosures: 是否使用闭包回调
+    func setupReachability(_ hostName: String?, isUseClosures: Bool) {
+        let reachability: Reachability?
+        if let hostName = hostName {
+            reachability = Reachability(hostname: hostName)
+            print(hostName)
         } else {
-            print("网络连接：不可用")
-            isConnection = false
+            reachability = Reachability()
+            print("No host name")
         }
+        self.reachability = reachability
         
-        // 判断连接类型
-        if reachability!.connection == .wifi {
+        if isUseClosures {
+            reachability?.whenReachable = { reachability in
+                self.updateWhenReachable(reachability)
+            }
+            reachability?.whenUnreachable = { reachability in
+                self.updateWhenNotReachable(reachability)
+            }
+        } else {
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(reachabilityChanged(_:)),
+                name: .reachabilityChanged,
+                object: reachability
+            )
+        }
+    }
+    
+    /// 当网络通畅时更新
+    ///
+    /// - Parameter reachability: 网络可达性数据包
+    func updateWhenReachable(_ reachability: Reachability) {
+        print("\(reachability.description): \(reachability.connection)")
+        print("网络连接：可用")
+        
+        isConnection = true
+        
+        identifyConnectionType(reachability: reachability)
+    }
+    
+    /// 当网络不通畅时更新
+    ///
+    /// - Parameter reachability: 网络可达性数据包
+    func updateWhenNotReachable(_ reachability: Reachability) {
+        print("\(reachability.description): \(reachability.connection)")
+        print("网络连接：不可用")
+
+        isConnection = false
+    }
+    
+    
+    /// 响应监听网络状态变化
+    ///
+    /// - Parameter note: 通知体
+    @objc func reachabilityChanged(_ note: Notification) {
+        let reachability = note.object as! Reachability
+        
+        if reachability.connection != .none {
+            updateWhenReachable(reachability)
+        } else {
+            updateWhenNotReachable(reachability)
+        }
+    }
+    
+    
+    /// 识别网络类型
+    ///
+    /// - Parameter reachability: 网络可达性数据包
+    func identifyConnectionType(reachability: Reachability) {
+        switch reachability.connection {
+        case .wifi:
             print("连接类型：WiFi")
             connectionType = "WiFi"
-        } else if reachability!.connection == .cellular {
-            print("连接类型：移动网络")
+            break
+        case .cellular:
+            print("连接类型：运营商")
             connectionType = "Cellular"
-        } else {
-            print("连接类型：没有网络连接")
+            break
+        default:
+            print("连接类型：未知连接")
             connectionType = "Unknown"
+            break
         }
+    }
+    
+    /// 开始监听
+    func startNotifier() {
+        print("Notifier: start notifier")
+        do {
+            try reachability?.startNotifier()
+        } catch {
+            print("Unable to start\nnotifier")
+            return
+        }
+    }
+    
+    /// 结束监听
+    func stopNotifier() {
+        print("Notifier: stop notifier")
+        reachability?.stopNotifier()
+        NotificationCenter.default.removeObserver(self, name: .reachabilityChanged, object: nil)
+        reachability = nil
     }
 }
 
@@ -131,7 +232,7 @@ extension IMSocketManager {
     /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据(刷新)
     func sendMessage(messageString msg: String, completion callback: SocketDidReadBlock?) {
         if let data = msg.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
-            checkConnect()
+//            checkConnect()
             
             if !isConnection {
                 print("socket 未连通")
@@ -331,6 +432,10 @@ extension IMSocketManager: GCDAsyncSocketDelegate {
 
 extension IMSocketManager {
     
+    /// 字典转字符串
+    ///
+    /// - Parameter dict: 字典数据
+    /// - Returns: 处理完成后的字符串数据
     func convertDictionaryToString(dict:[String:AnyObject]) -> String {
         var result:String = ""
         do {
@@ -347,6 +452,9 @@ extension IMSocketManager {
     }
     
     
+    /// 创建 Request id
+    ///
+    /// - Returns: 返回 id
     func createRequestID() -> String? {
         let timeInterval = Int(Date().timeIntervalSince1970 * 1000000)
         let randomRequestID = String(format: "%ld%d", timeInterval, arc4random() % 100000)
