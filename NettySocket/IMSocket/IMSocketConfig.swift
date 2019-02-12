@@ -39,6 +39,12 @@ enum SocketBagType : Int {
     case BagTypeConnectionAuthAppraisal = 7 //连接鉴权
 }
 
+enum CallBackError: Error {
+    case UnConnectStatus
+    case DataHandleError
+    case FileCorrupted
+}
+
 enum SocketRequestType: Int {
     case CmdTypeNone = 0 // 未登录
     case CmdTypeConnectRequest = 1 // 连接请求

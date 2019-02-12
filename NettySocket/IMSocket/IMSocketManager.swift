@@ -23,13 +23,18 @@ protocol IMSocketManagerDelegate: class {
 /// 重连闭包
 typealias reconnetCompletionHandle = (Bool) ->()
 
-class IMSocketManager: NSObject {
+/// 错误回调
+typealias SocketDidReadBlock = (Error?, Any?) -> Void
 
+class IMSocketManager: NSObject {
+    
     static let shared = IMSocketManager()
     
     weak var delegate: IMSocketManagerDelegate?
-
+    
     private var tcpSocket: GCDAsyncSocket?
+    
+    var requestsMap: [AnyHashable : Any] = [:]
     
     /// connect 状态：
     ///
@@ -48,7 +53,7 @@ class IMSocketManager: NSObject {
     ///
     /// 为了后续业务上用户主动连接处理
     var reconncetStatusHandle: reconnetCompletionHandle?
-
+    
     /// 心跳包计时
     var beatTimer:Timer!
     
@@ -93,8 +98,24 @@ extension IMSocketManager {
     ///
     /// - Parameter msg: 消息字符串
     /// 写入数据后发送 \r 或 \n 告诉流没有更多的数据(刷新)
-    func sendMessage(messageString msg: String) {
+    func sendMessage(messageString msg: String, completion callback: SocketDidReadBlock?) {
         if let data = msg.data(using: .utf8), let carriageReturn = "\r".data(using: .utf8) {
+            
+            // TODO: 需要判断网络环境
+            //            if socketManager.connectStatus == -1 {
+            print("socket 未连通")
+            if (callback != nil) {
+                callback!(CallBackError.UnConnectStatus, nil)
+            }
+            return
+            //            }
+            
+            
+            let blockRequestID = createRequestID()
+            if callback != nil {
+                requestsMap[blockRequestID] = callback
+            }
+            
             sendMessageData(data: data as NSData, type: "text")
             tcpSocket?.write(carriageReturn, withTimeout: -1, tag: 99)
         }
@@ -295,4 +316,10 @@ extension IMSocketManager {
         return result
     }
     
+    
+    func createRequestID() -> String? {
+        let timeInterval = Int(Date().timeIntervalSince1970 * 1000000)
+        let randomRequestID = String(format: "%ld%d", timeInterval, arc4random() % 100000)
+        return randomRequestID
+    }
 }

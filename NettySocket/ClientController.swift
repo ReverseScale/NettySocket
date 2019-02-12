@@ -110,7 +110,11 @@ class ClientController: UIViewController, UIImagePickerControllerDelegate, UINav
     @IBAction func sendMessageAction(_ sender: Any) {
 
         if let messageString = messageTextField.text, !messageString.isEmpty {
-            IMSocketManager.shared.sendMessage(messageString: messageString)
+//            IMSocketManager.shared.sendMessage(messageBuilder: messageString)
+            IMSocketManager.shared.sendMessage(messageString: messageString) { (error, data) in
+                print(error)
+                print(data)
+            }
             addLogText("我发送了：\(messageTextField.text!)")
             messageTextField.text = ""
         }
