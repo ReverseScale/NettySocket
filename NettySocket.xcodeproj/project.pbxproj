@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,7 +16,6 @@
 		52863F5F220139F400353295 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52863F5D220139F400353295 /* Main.storyboard */; };
 		52863F61220139F500353295 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52863F60220139F500353295 /* Assets.xcassets */; };
 		52863F64220139F500353295 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52863F62220139F500353295 /* LaunchScreen.storyboard */; };
-		52863F6D220141FF00353295 /* SwiftSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F6C220141FF00353295 /* SwiftSocketController.swift */; };
 		52863F6F2201455C00353295 /* CocoaAsyncSocketController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */; };
 		52863F7222016B5400353295 /* ClientController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7022016B5400353295 /* ClientController.swift */; };
 		52863F7322016B5400353295 /* ServerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52863F7122016B5400353295 /* ServerController.swift */; };
@@ -39,7 +38,6 @@
 		52863F60220139F500353295 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		52863F63220139F500353295 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		52863F65220139F500353295 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		52863F6C220141FF00353295 /* SwiftSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSocketController.swift; sourceTree = "<group>"; };
 		52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaAsyncSocketController.swift; sourceTree = "<group>"; };
 		52863F7022016B5400353295 /* ClientController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientController.swift; sourceTree = "<group>"; };
 		52863F7122016B5400353295 /* ServerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerController.swift; sourceTree = "<group>"; };
@@ -112,7 +110,6 @@
 			children = (
 				52863F59220139F400353295 /* AppDelegate.swift */,
 				52863F5B220139F400353295 /* ViewController.swift */,
-				52863F6C220141FF00353295 /* SwiftSocketController.swift */,
 				525E8FC7220538EF00CF1518 /* IMSocket */,
 				52863F6E2201455C00353295 /* CocoaAsyncSocketController.swift */,
 				52863F7122016B5400353295 /* ServerController.swift */,
@@ -242,24 +239,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
-				"${BUILT_PRODUCTS_DIR}/ProtocolBuffers-Swift/ProtocolBuffers.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftSocket/SwiftSocket.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-NettySocket/Pods-NettySocket-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtocolBuffers.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-NettySocket/Pods-NettySocket-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NettySocket/Pods-NettySocket-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NettySocket/Pods-NettySocket-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -270,7 +258,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				525E8FC62204474000CF1518 /* Validate.swift in Sources */,
-				52863F6D220141FF00353295 /* SwiftSocketController.swift in Sources */,
 				52863F5C220139F400353295 /* ViewController.swift in Sources */,
 				52863F7A2202E71100353295 /* IMSocketManager.swift in Sources */,
 				52863F6F2201455C00353295 /* CocoaAsyncSocketController.swift in Sources */,
